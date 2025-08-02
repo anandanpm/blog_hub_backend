@@ -3,7 +3,7 @@ import * as blogService from "../services/blogService"
 
 export const createBlog = async (req: Request, res: Response) => {
   try {
-    // req.userId is now correctly typed due to types/express.d.ts
+    
     const blog = await blogService.createBlogService({ ...req.body, author: req.userId })
     res.status(201).json(blog)
   } catch (err: any) {

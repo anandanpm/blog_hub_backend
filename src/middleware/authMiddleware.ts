@@ -5,10 +5,9 @@ import { JwtPayload } from "../interfaces/iJwtpayload"
 
 
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
-  // Try to get token from Authorization header first
   let token = req.headers.authorization?.split(" ")[1]
 
-  // If not in header, try to get from cookies
+
   if (!token && req.cookies && req.cookies.accessToken) {
     token = req.cookies.accessToken
   }
