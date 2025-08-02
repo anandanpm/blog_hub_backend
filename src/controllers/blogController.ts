@@ -6,7 +6,7 @@ export const createBlog = async (req: Request, res: Response) => {
     
     const blog = await blogService.createBlogService({ ...req.body, author: req.userId })
     res.status(201).json(blog)
-  } catch (err: any) {
+  } catch (err:any) {
     res.status(400).json({ message: err.message })
   }
 }

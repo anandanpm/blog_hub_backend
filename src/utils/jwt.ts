@@ -1,39 +1,16 @@
-import jwt, { JwtPayload } from 'jsonwebtoken';
-import { Response } from 'express';
-import dotenv from 'dotenv';
+import jwt from "jsonwebtoken"
+import dotenv from "dotenv"
 
-dotenv.config();
+dotenv.config()
 
-const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET || 'accesssecret';
-const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET || 'refreshsecret';
+const JWT_SECRET = process.env.JWT_SECRET as string 
+const ACCESS_TOKEN_EXPIRATION = "15m" 
+const REFRESH_TOKEN_EXPIRATION = "7d"
 
-export const generateAccessToken = (payload: object): string => {
-  return jwt.sign(payload, ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
-};
+export const generateAccessToken = (payload: { id: string }) => {
+  return jwt.sign({ userId: payload.id }, JWT_SECRET, { expiresIn: ACCESS_TOKEN_EXPIRATION })
+}
 
-export const generateRefreshToken = (payload: object): string => {
-  return jwt.sign(payload, REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
-};
-
-export const sendTokens = (res: Response, accessToken: string, refreshToken: string): void => {
-  res.cookie('accessToken', accessToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    maxAge: 15 * 60 * 1000,
-    sameSite: 'strict',
-  });
-  res.cookie('refreshToken', refreshToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    maxAge: 7 * 24 * 60 * 60 * 1000,
-    sameSite: 'strict',
-  });
-};
-
-export const verifyAccessToken = (token: string): JwtPayload => {
-  return jwt.verify(token, ACCESS_TOKEN_SECRET) as JwtPayload;
-};
-
-export const verifyRefreshToken = (token: string): JwtPayload => {
-  return jwt.verify(token, REFRESH_TOKEN_SECRET) as JwtPayload;
-};
+export const generateRefreshToken = (payload: { id: string }) => {
+  return jwt.sign({ userId: payload.id }, JWT_SECRET, { expiresIn: REFRESH_TOKEN_EXPIRATION })
+}
