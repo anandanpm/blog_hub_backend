@@ -1,4 +1,4 @@
-import type { IBlog } from "../interfaces/IblogInterface"
+import type { IBlog } from "../interfaces/iBloginterface"
 import { Blog } from "../models/Blog"
 
 export const createBlog = (data: IBlog) => Blog.create(data)

@@ -1,4 +1,4 @@
-import type { IBlog } from "../interfaces/IblogInterface"
+import type { IBlog } from "../interfaces/iBloginterface"
 import * as blogRepo from "../repositories/blogRepo"
 
 export const createBlogService = async (data: IBlog) => blogRepo.createBlog(data)

@@ -1,5 +1,5 @@
 import mongoose from "mongoose"
-import type { IUser } from "../interfaces/IuserInterface"
+import type { IUser } from "../interfaces/iUserinterface"
 
 const userSchema = new mongoose.Schema<IUser>(
   {

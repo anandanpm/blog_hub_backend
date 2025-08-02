@@ -1,4 +1,4 @@
-import type { IUserPayload } from "../interfaces/IuserInterface"
+import type { IUserPayload } from "../interfaces/iUserinterface"
 import { User } from "../models/User"
 
 export const UserRepo = {
