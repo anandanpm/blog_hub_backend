@@ -1,22 +1,25 @@
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import { createUser, findUserByEmail } from '../repositories/userRepo';
-import { IUser } from '../interfaces/IuserInterface';
+import bcrypt from "bcryptjs"
+import { UserRepo } from "../repositories/userRepo"
+import { generateAccessToken, generateRefreshToken, sendTokens } from "../utils/jwt"
 
-const JWT_SECRET = process.env.JWT_SECRET || 'secret';
-
-export const registerService = async (data: IUser) => {
-  const existingUser = await findUserByEmail(data.email);
-  if (existingUser) throw new Error('User already exists');
-  const hashedPassword = await bcrypt.hash(data.password, 10);
-  return createUser({ ...data, password: hashedPassword } as IUser);
-};
-
-export const loginService = async (email: string, password: string) => {
-  const user = await findUserByEmail(email);
-  if (!user) throw new Error('Invalid credentials');
-  const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) throw new Error('Invalid credentials');
-  const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1d' });
-  return { token, user };
+export const register = async ({ name, email, password }: { name: string; email: string; password: string }) => {
+  const existingUser = await UserRepo.findByEmail(email)
+  if (existingUser) throw new Error("User already exists")
+  const hashedPassword = await bcrypt.hash(password, 10)
+  const user = await UserRepo.create({ name, email, password: hashedPassword })
+  const accessToken = generateAccessToken({ id: user._id })
+  const refreshToken = generateRefreshToken({ id: user._id })
+  return { user, accessToken, refreshToken }
 }
+
+export const login = async ({ email, password }: { email: string; password: string }) => {
+  const user = await UserRepo.findByEmail(email)
+  if (!user) throw new Error("Invalid credentials")
+  const isMatch = await bcrypt.compare(password, user.password)
+  if (!isMatch) throw new Error("Invalid credentials")
+  const accessToken = generateAccessToken({ id: user._id })
+  const refreshToken = generateRefreshToken({ id: user._id })
+  return { user, accessToken, refreshToken }
+}
+
+export { sendTokens }

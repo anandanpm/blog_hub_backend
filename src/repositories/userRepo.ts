@@ -1,6 +1,8 @@
-import { IUser } from "../interfaces/IuserInterface";
-import { User } from "../models/User";
+import type { IUserPayload } from "../interfaces/IuserInterface"
+import { User } from "../models/User"
 
-export const createUser = (data: IUser) => User.create(data);
-export const findUserByEmail = (email: string) => User.findOne({ email });
-export const findUserById = (id: string) => User.findById(id);
+export const UserRepo = {
+  create: (data: IUserPayload) => User.create(data), // Changed type to IUserPayload
+  findByEmail: (email: string) => User.findOne({ email }),
+  findById: (id: string) => User.findById(id),
+}
