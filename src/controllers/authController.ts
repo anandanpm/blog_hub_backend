@@ -32,3 +32,14 @@ export const logout = asyncHandler(async (req: Request, res: Response) => {
   res.clearCookie("refreshToken")
   res.status(200).json({ message: "Logged out successfully" })
 })
+
+export const getProfile = asyncHandler(async (req: Request, res: Response) => {
+  const userId = req.userId 
+  if (!userId) {
+    res.status(401).json({ message: "Unauthorized" })
+    return
+  }
+
+  const user = await authService.getProfileService(userId)
+  res.status(200).json({ user })
+})

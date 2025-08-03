@@ -19,3 +19,10 @@ export const loginService = async (email: string, password: string) => {
   const refreshToken = generateRefreshToken({ id: user._id.toString() })
   return { user, accessToken, refreshToken }
 }
+
+export const getProfileService = async (userId: string) => {
+  const user = await UserRepo.findById(userId)
+  if (!user) throw new Error("User not found")
+  const { password, ...userWithoutPassword } = user.toObject()
+  return userWithoutPassword
+}
