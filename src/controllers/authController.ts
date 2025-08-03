@@ -11,16 +11,16 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
   const { user, accessToken, refreshToken } = await authService.loginService(req.body.email, req.body.password)
 
   res.cookie("accessToken", accessToken, {
-    httpOnly: false,
+    httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
+    sameSite:process.env.SAMESITE as 'strict' | 'lax' | 'none' || 'none',
     maxAge: 15 * 60 * 1000,
   })
 
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
+     sameSite:process.env.SAMESITE as 'strict' | 'lax' | 'none' || 'none',
     maxAge: 7 * 24 * 60 * 60 * 1000,
   })
 
